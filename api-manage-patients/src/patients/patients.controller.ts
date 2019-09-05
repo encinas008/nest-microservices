@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UploadedFiles } from '@nestjs/common';
 import { PatientDto } from './dto/patient.dto';
 import { PatientsService } from './patients.service';
+import { HistoryDto } from './dto/history.dto';
 
 @Controller('patients')
 export class PatientsController {
@@ -29,5 +30,15 @@ export class PatientsController {
   @Delete(':id')
   async deletePatient(@Param('id') id: String) {
     return this.patientService.deletePatient(id);
+  }
+
+  @Post(':id/histories')
+  async createHistoryByUser(@Param('id') id: String, @Body() historyDto: HistoryDto) {
+    return this.patientService.createHistory(id, historyDto);
+  }
+
+  @Post('histories/:id/files')
+  async AddFileToHistory(@Param('id') id: String, @UploadedFiles() files) {
+    return this.patientService.addFileToHistory(id, files);
   }
 }
