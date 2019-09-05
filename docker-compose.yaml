@@ -7,7 +7,7 @@ services:
     volumes:
       - ./api-manage-patients:/app
     ports:
-      - "3031:3031"
+      - "3004:3004"
     depends_on:
       - mongo_db
 
