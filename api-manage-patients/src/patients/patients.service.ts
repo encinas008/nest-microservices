@@ -43,10 +43,16 @@ export class PatientsService {
 
   async addFileToHistory(id, files) {
     const ObjectId = mongoose.Types.ObjectId;
-    this.patientModel.findOne({'histories._id': new ObjectId(id)})
-    return this.http.post(APPCONFIG.URL_UPLOAD_FILE, files, {
-      headers: {
-          'Content-Type': 'multipart/form-data'
-      }}).toPromise()
+    this.patientModel.findOne({'histories._id': new ObjectId(id)}, (error, history) => {
+      if (!error) {
+        this.http.post(APPCONFIG.URL_UPLOAD_FILE, files).toPromise()
+          .then(() => {
+            console.log('It is works');
+          })
+          .catch(error => {
+            console.log('ERROR: ', error.message);
+          })
+      }
+    })
   }
 }

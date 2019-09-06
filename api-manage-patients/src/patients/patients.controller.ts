@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UploadedFiles, UseInterceptors, Request } from '@nestjs/common';
 import { PatientDto } from './dto/patient.dto';
 import { PatientsService } from './patients.service';
 import { HistoryDto } from './dto/history.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('patients')
 export class PatientsController {
@@ -38,7 +39,9 @@ export class PatientsController {
   }
 
   @Post('histories/:id/files')
+  @UseInterceptors(FilesInterceptor('files', null, {}))
   async AddFileToHistory(@Param('id') id: String, @UploadedFiles() files) {
-    return this.patientService.addFileToHistory(id, files);
+    this.patientService.addFileToHistory(id, files);
+    return id;
   }
 }
