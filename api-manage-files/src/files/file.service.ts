@@ -6,7 +6,6 @@ export class FileService {
   constructor(@Inject('FILE_MODEL') private readonly file: Model<File>) { }
 
   async createFile(data) {
-    const createFile = this.file(data);
-    return await createFile.save();
+    return this.file.insertMany(data);
   }
 }

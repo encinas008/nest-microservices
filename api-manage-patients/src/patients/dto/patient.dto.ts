@@ -1,11 +1,11 @@
-import { IsDate, IsNotEmpty } from 'class-validator';
+import { IsDate, IsNotEmpty, IsDateString } from 'class-validator';
 
 export class PatientDto {
   @IsNotEmpty()
   readonly fullName: String;
   @IsNotEmpty()
   readonly address: String;
-  @IsDate()
+  @IsNotEmpty()
   readonly birthday: Date;
   @IsNotEmpty()
   readonly gender: Boolean;

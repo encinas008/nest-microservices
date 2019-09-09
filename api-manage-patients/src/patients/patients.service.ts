@@ -1,15 +1,13 @@
-import { Injectable, Inject, HttpService } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Patient } from './interfaces/patient.interface';
 import { PatientDto } from './dto/patient.dto';
 import { HistoryDto } from './dto/history.dto';
-import { APPCONFIG } from '../constants/app.config';
 import * as mongoose from 'mongoose';
 
 @Injectable()
 export class PatientsService {
-  constructor(@Inject('PATIENT_MODEL') private readonly patientModel: Model<Patient>,
-              private http: HttpService, ) { }
+  constructor(@Inject('PATIENT_MODEL') private readonly patientModel: Model<Patient>) { }
 
   async createPatient(patientDto: PatientDto): Promise<Patient> {
     const createPatient = this.patientModel(patientDto);
@@ -41,17 +39,12 @@ export class PatientsService {
     });
   }
 
-  async addFileToHistory(id, files) {
+  async addFileToHistory(id, fileDtos) {
     const ObjectId = mongoose.Types.ObjectId;
-    this.patientModel.findOne({'histories._id': new ObjectId(id)}, (error, history) => {
+    this.patientModel.findOne({'histories._id': ObjectId(id)}, (error, history) => {
       if (!error) {
-        this.http.post(APPCONFIG.URL_UPLOAD_FILE, files).toPromise()
-          .then(() => {
-            console.log('It is works');
-          })
-          .catch(error => {
-            console.log('ERROR: ', error.message);
-          })
+        history.files.push(fileDtos);
+        history.save();
       }
     })
   }
